@@ -7,6 +7,7 @@ import itertools
 #Q-learning
 stepsize = 0.2
 discount = 0.9
+Qlimiter = 100000
 
 #Game
 WINDOW_WIDTH = 1280                                                             #

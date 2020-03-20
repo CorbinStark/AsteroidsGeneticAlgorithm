@@ -6,7 +6,7 @@ import GA
 import os.path
 import constant as C
 
-MODE = 1                                                                        #0 = Player control, 1 = Q-Learning, 2 = GA
+MODE = 2                                                                        #0 = Player control, 1 = Q-Learning, 2 = GA
 
 class Player:
     x = 100
@@ -85,6 +85,7 @@ def main():
         oldstateval = 0
         oldscore = 0
         prevQscore = 0
+        runtime = 0
 
     #Initialize level one asteroids ().
     LEVEL = 1
@@ -125,7 +126,7 @@ def main():
         fitness_scores = [0 for i in range(GA.PopulationSize)]
         for each in range(len(population)):
             fitness_scores[each] = simulate(newGameContainer(), population[each])
-            print(fitness_scores[each])
+            #print(fitness_scores[each])
         average = GA.average_fitness(fitness_scores)
         print("avg fitness: "+str(average))
 
@@ -173,10 +174,10 @@ def main():
         if (MODE == QLearning and currentaction == 'Shoot') or keys[pygame.K_SPACE]:
             if not player.firing: projectiles.append(fireProjectile(player))
             player.firing = True
-        if MODE == QLearning:
-            if currentaction != 'Shoot': player.firing = False
-        else:
-             if not keys[pygame.K_SPACE]: player.firing = False
+        #if MODE == QLearning:
+            #if currentaction != 'Shoot': player.firing = False
+        #else:
+        if not keys[pygame.K_SPACE]: player.firing = False
 
         #Update player, asteroids, projectiles, SCORE, LEVEL and state.
         rays = sense(player, asteroids)
@@ -190,7 +191,13 @@ def main():
         #Draw the game.
         if C.DISPLAY_GAME: drawGame(player, ship, asteroids, projectiles, scoreboard, SCORE, statedisplay, rays, font, win)
 
-        timer.tick(C.FPS)
+        if MODE == Default: timer.tick(C.FPS)
+        if MODE == QLearning:
+            timer.tick()
+            runtime += 1
+            if runtime == C.Qlimiter: run = False
+            if runtime % 10000 == 0: print(SCORE)
+
 
     if MODE != 2: pygame.quit()
     if C.SAVEQMATRIX: saveQmatrix(Q.Q_Matrix)
