@@ -6,7 +6,7 @@ import GA
 import os.path
 import constant as C
 
-MODE = 2                                                                        #0 = Player control, 1 = Q-Learning, 2 = GA
+MODE = 1                                                                        #0 = Player control, 1 = Q-Learning, 2 = GA
 
 class Player:
     x = 100
@@ -122,8 +122,8 @@ def main():
     run = True
 
     if MODE == Genetic:
-        population = [GA.random_chromosome() for _ in range(GA.PopulationSize)]
-        fitness_scores = [0 for i in range(GA.PopulationSize)]
+        population = [GA.random_chromosome() for _ in range(C.PopulationSize)]
+        fitness_scores = [0 for i in range(C.PopulationSize)]
         for each in range(len(population)):
             fitness_scores[each] = simulate(newGameContainer(), population[each])
             #print(fitness_scores[each])
@@ -131,7 +131,7 @@ def main():
         print("avg fitness: "+str(average))
 
         i = 0
-        while i < GA.NumIterations:
+        while i < C.NumIterations:
             i += 1
             population, fitness_scores = GA.breed(population, fitness_scores)
             average = GA.average_fitness(fitness_scores)
@@ -255,7 +255,7 @@ def newGameContainer():
     asteroids = generateAsteroids(asteroids, LEVEL)
     projectiles = []
     SCORE = 0
-    game = [player, asteroids, projectiles, LEVEL, SCORE, GA.SimulationLength]
+    game = [player, asteroids, projectiles, LEVEL, SCORE, C.SimulationLength]
     return game
 
 #Generate a projectile in the direction the player is facing.
